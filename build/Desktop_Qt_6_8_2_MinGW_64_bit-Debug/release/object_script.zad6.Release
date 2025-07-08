@@ -1,0 +1,10 @@
+release/canvas.o
+release/line.o
+release/main.o
+release/mainwindow.o
+release/rect.o
+release/rectangleshape.o
+release/scene.o
+release/shape.o
+release/moc_canvas.o
+release/moc_mainwindow.o

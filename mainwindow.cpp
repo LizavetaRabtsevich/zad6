@@ -1,0 +1,57 @@
+#include "mainwindow.h"
+#include <QMenuBar>
+#include <QFileDialog>
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), canvas(new Canvas(this))
+{
+    setCentralWidget(canvas);
+
+    QMenu *fileMenu = menuBar()->addMenu("Файл");
+    QAction *saveAct = fileMenu->addAction("Сохранить");
+    QAction *loadAct = fileMenu->addAction("Загрузить");
+
+    QMenu *drawMenu = menuBar()->addMenu("Рисовать");
+    QAction *lineAct = drawMenu->addAction("Линия");
+    QAction *rectAct = drawMenu->addAction("Прямоугольник");
+    QAction *circleAct = drawMenu->addAction("Круг");
+    QAction *triangleAct = drawMenu->addAction("Треугольник");
+
+    connect(saveAct, &QAction::triggered, this, &MainWindow::saveFile);
+    connect(loadAct, &QAction::triggered, this, &MainWindow::loadFile);
+    connect(lineAct, &QAction::triggered, this, &MainWindow::drawLine);
+    connect(rectAct, &QAction::triggered, this, &MainWindow::drawRect);
+    connect(circleAct, &QAction::triggered, this, &MainWindow::drawCircle);
+    connect(triangleAct, &QAction::triggered, this, &MainWindow::drawTriangle);
+}
+
+void MainWindow::saveFile() {
+    QString fileName = QFileDialog::getSaveFileName(this, "Save File", "", "*.vec");
+    if (!fileName.isEmpty()) {
+        canvas->saveToFile(fileName);
+    }
+}
+
+void MainWindow::loadFile() {
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "*.vec");
+    if (!fileName.isEmpty()) {
+        canvas->loadFromFile(fileName);
+    }
+}
+
+void MainWindow::drawLine() {
+    canvas->setMode(Canvas::DrawLine);
+}
+
+void MainWindow::drawRect() {
+    canvas->setMode(Canvas::DrawRect);
+}
+
+void MainWindow::drawCircle() {
+    canvas->setMode(Canvas::DrawCircle);
+}
+
+void MainWindow::drawTriangle() {
+    canvas->setMode(Canvas::DrawTriangle);
+}
+
