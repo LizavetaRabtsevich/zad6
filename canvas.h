@@ -15,6 +15,7 @@ public:
     void saveToFile(const QString &fileName);
     void loadFromFile(const QString &fileName);
     void setCurrentColor(const QColor &color);
+    void undoLastShape();
 
 protected:
     void paintEvent(QPaintEvent *) override;

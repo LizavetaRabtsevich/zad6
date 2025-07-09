@@ -167,3 +167,11 @@ void Canvas::setCurrentColor(const QColor &color) {
     qDebug() << "Color changed to:" << currentColor;
     update();
 }
+
+void Canvas::undoLastShape() {
+    if (!shapes.isEmpty()) {
+        delete shapes.last();
+        shapes.removeLast();
+        update();
+    }
+}

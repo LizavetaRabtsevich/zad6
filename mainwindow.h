@@ -16,6 +16,7 @@ private slots:
     void drawCircle();
     void drawTriangle();
     void chooseColor();
+    void undoLastShape();
 private:
     Canvas *canvas;
 };

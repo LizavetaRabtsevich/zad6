@@ -13,9 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *loadAct = fileMenu->addAction("Загрузить");
     QMenu *colorMenu = menuBar()->addMenu("Цвет");
     QAction *colorAct = colorMenu->addAction("Выбрать цвет");
-
-    connect(colorAct, &QAction::triggered, this, &MainWindow::chooseColor);
-
+    QAction *undoAct = fileMenu->addAction("Отменить последний");
     QMenu *drawMenu = menuBar()->addMenu("Рисовать");
     QAction *lineAct = drawMenu->addAction("Линия");
     QAction *rectAct = drawMenu->addAction("Прямоугольник");
@@ -28,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(rectAct, &QAction::triggered, this, &MainWindow::drawRect);
     connect(circleAct, &QAction::triggered, this, &MainWindow::drawCircle);
     connect(triangleAct, &QAction::triggered, this, &MainWindow::drawTriangle);
+    connect(undoAct, &QAction::triggered, this, &MainWindow::undoLastShape);
+    connect(colorAct, &QAction::triggered, this, &MainWindow::chooseColor);
 }
 
 void MainWindow::saveFile() {
@@ -66,4 +66,9 @@ void MainWindow::chooseColor() {
         canvas->setCurrentColor(color);
     }
 }
+
+void MainWindow::undoLastShape() {
+    canvas->undoLastShape();
+}
+
 
