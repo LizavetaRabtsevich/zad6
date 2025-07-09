@@ -14,6 +14,7 @@ public:
     void setMode(Mode m);
     void saveToFile(const QString &fileName);
     void loadFromFile(const QString &fileName);
+    void setCurrentColor(const QColor &color);
 
 protected:
     void paintEvent(QPaintEvent *) override;
@@ -26,6 +27,6 @@ private:
     Shape *currentShape = nullptr;
     Mode mode = None;
     QPoint startPoint;
-
+    QColor currentColor = Qt::black;
     void clearShapes();
 };

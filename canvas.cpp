@@ -8,7 +8,7 @@
 #include <QFile>
 #include <QDataStream>
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent) {
+Canvas::Canvas(QWidget *parent) : QWidget(parent), currentColor(Qt::black) {
     setMouseTracking(true);
 }
 
@@ -20,7 +20,8 @@ void Canvas::setMode(Mode m) {
     mode = m;
 }
 
-void Canvas::paintEvent(QPaintEvent *) {
+void Canvas::paintEvent(QPaintEvent *)
+{
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     for (Shape *shape : shapes) {
@@ -31,6 +32,7 @@ void Canvas::paintEvent(QPaintEvent *) {
     }
 }
 
+
 void Canvas::mousePressEvent(QMouseEvent *event) {
     startPoint = event->pos();
     if (mode == DrawLine) {
@@ -38,11 +40,12 @@ void Canvas::mousePressEvent(QMouseEvent *event) {
     } else if (mode == DrawRect) {
         currentShape = new Rect(startPoint, startPoint);
     } else if (mode == DrawCircle) {
-        currentShape = new Circle(startPoint , 0);
+        currentShape = new Circle(startPoint, 0);
     } else if (mode == DrawTriangle) {
         currentShape = new Triangle(startPoint, startPoint, startPoint);
     }
-    update();
+    if (currentShape)
+        currentShape->color = currentColor;
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event) {
@@ -123,6 +126,12 @@ void Canvas::saveToFile(const QString &fileName) {
         } else if (dynamic_cast<Rect *>(shape)) {
             out << QString("Rect");
             shape->serialize(out);
+        } else if (dynamic_cast<Circle *>(shape)) {
+            out << QString("Circle");
+            shape->serialize(out);
+        } else if (dynamic_cast<Triangle *>(shape)) {
+            out << QString("Triangle");
+            shape->serialize(out);
         }
     }
 }
@@ -144,11 +153,17 @@ void Canvas::loadFromFile(const QString &fileName) {
             shape = new Line();
         } else if (type == "Rect") {
             shape = new Rect();
-        }
-        if (shape) {
-            shape->deserialize(in);
-            shapes.append(shape);
+        } else if (type == "Circle") {
+            shape = new Circle();
+        } else if (type == "Triangle") {
+            shape = new Triangle();
         }
     }
+    update();
+}
+
+void Canvas::setCurrentColor(const QColor &color) {
+    currentColor = color;
+    qDebug() << "Color changed to:" << currentColor;
     update();
 }

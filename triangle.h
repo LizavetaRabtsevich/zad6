@@ -6,7 +6,6 @@
 class Triangle : public Shape {
 public:
     QPoint p1, p2, p3;
-
     Triangle();
     Triangle(QPoint a, QPoint b, QPoint c);
 

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QMenuBar>
 #include <QFileDialog>
+#include <QColorDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), canvas(new Canvas(this))
@@ -10,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu *fileMenu = menuBar()->addMenu("Файл");
     QAction *saveAct = fileMenu->addAction("Сохранить");
     QAction *loadAct = fileMenu->addAction("Загрузить");
+    QMenu *colorMenu = menuBar()->addMenu("Цвет");
+    QAction *colorAct = colorMenu->addAction("Выбрать цвет");
+
+    connect(colorAct, &QAction::triggered, this, &MainWindow::chooseColor);
 
     QMenu *drawMenu = menuBar()->addMenu("Рисовать");
     QAction *lineAct = drawMenu->addAction("Линия");
@@ -53,5 +58,12 @@ void MainWindow::drawCircle() {
 
 void MainWindow::drawTriangle() {
     canvas->setMode(Canvas::DrawTriangle);
+}
+
+void MainWindow::chooseColor() {
+    QColor color = QColorDialog::getColor(Qt::black, this, "Выберите цвет");
+    if (color.isValid()) {
+        canvas->setCurrentColor(color);
+    }
 }
 
