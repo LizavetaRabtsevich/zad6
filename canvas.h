@@ -7,15 +7,17 @@
 class Canvas : public QWidget {
     Q_OBJECT
 public:
-    enum Mode { None, DrawLine, DrawRect, DrawCircle, DrawTriangle };
+    enum Mode { None, DrawLine, DrawRect, DrawCircle, DrawTriangle, DrawEllipse, DrawFreeLine};
     explicit Canvas(QWidget *parent = nullptr);
     ~Canvas();
 
+    int currentPenWidth = 2;
     void setMode(Mode m);
     void saveToFile(const QString &fileName);
     void loadFromFile(const QString &fileName);
     void setCurrentColor(const QColor &color);
     void undoLastShape();
+    void setCurrentPenWidth(int width);
 
 protected:
     void paintEvent(QPaintEvent *) override;

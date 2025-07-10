@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     canvas.cpp \
     circle.cpp \
+    ellipse.cpp \
+    freeline.cpp \
     line.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,7 +22,9 @@ SOURCES += \
 HEADERS += \
     canvas.h \
     circle.h \
+    ellipse.h \
     ellipseshape.h \
+    freeline.h \
     line.h \
     lineshape.h \
     mainwindow.h \

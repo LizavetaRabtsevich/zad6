@@ -1,10 +1,11 @@
 release/canvas.o
+release/circle.o
+release/ellipse.o
+release/freeline.o
 release/line.o
 release/main.o
 release/mainwindow.o
 release/rect.o
-release/rectangleshape.o
-release/scene.o
-release/shape.o
+release/triangle.o
 release/moc_canvas.o
 release/moc_mainwindow.o

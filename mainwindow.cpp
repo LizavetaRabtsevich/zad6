@@ -19,7 +19,21 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *rectAct = drawMenu->addAction("Прямоугольник");
     QAction *circleAct = drawMenu->addAction("Круг");
     QAction *triangleAct = drawMenu->addAction("Треугольник");
+    QAction *ellipseAct = drawMenu->addAction("Эллипс");
+    QAction *freeLineAct = drawMenu->addAction("Карандаш");
 
+    QMenu *penMenu = menuBar()->addMenu("Толщина");
+    QAction *thinAct = penMenu->addAction("Тонкая (1)");
+    QAction *mediumAct = penMenu->addAction("Средняя (3)");
+    QAction *thickAct = penMenu->addAction("Толстая (5)");
+
+    connect(thinAct, &QAction::triggered, this, [this]() { canvas->setCurrentPenWidth(1); });
+    connect(mediumAct, &QAction::triggered, this, [this]() { canvas->setCurrentPenWidth(3); });
+    connect(thickAct, &QAction::triggered, this, [this]() { canvas->setCurrentPenWidth(5); });
+
+
+    connect(freeLineAct, &QAction::triggered, this, &::MainWindow::drawFreeLine);
+    connect(ellipseAct, &QAction::triggered, this, &MainWindow::drawEllipse);
     connect(saveAct, &QAction::triggered, this, &MainWindow::saveFile);
     connect(loadAct, &QAction::triggered, this, &MainWindow::loadFile);
     connect(lineAct, &QAction::triggered, this, &MainWindow::drawLine);
@@ -69,6 +83,14 @@ void MainWindow::chooseColor() {
 
 void MainWindow::undoLastShape() {
     canvas->undoLastShape();
+}
+
+void MainWindow::drawEllipse() {
+    canvas->setMode(Canvas::DrawEllipse);
+}
+
+void MainWindow::drawFreeLine() {
+    canvas->setMode(Canvas::DrawFreeLine);
 }
 
 

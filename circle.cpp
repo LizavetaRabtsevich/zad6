@@ -6,14 +6,14 @@ Circle::Circle() {}
 Circle::Circle(QPoint c, int r) : center(c), radius(r) {}
 
 void Circle::draw(QPainter &painter) {
-    painter.setPen(QPen(color, 2));
+    painter.setPen(QPen(color, penWidth));
     painter.drawEllipse(center, radius, radius);
 }
 
 void Circle::serialize(QDataStream &out) {
-    out << center << radius << color;
+    out << center << radius << color << penWidth;
 }
 
 void Circle::deserialize(QDataStream &in) {
-    in >> center >> radius >> color;
+    in >> center >> radius >> color >> penWidth;
 }

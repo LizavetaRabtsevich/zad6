@@ -7,15 +7,15 @@ Rect::Rect(QPoint s, QPoint e) {
 }
 
 void Rect::draw(QPainter &painter) {
-    painter.setPen(QPen(color, 2));
+    painter.setPen(QPen(color, penWidth));
     painter.drawRect(rect);
 }
 
 void Rect::serialize(QDataStream &out) {
-    out << rect << color;
+    out << rect << color << penWidth;
 }
 
 void Rect::deserialize(QDataStream &in) {
-    in >> rect >> color;
+    in >> rect >> color >> penWidth;
 }
 

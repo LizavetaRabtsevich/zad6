@@ -15,8 +15,11 @@ private slots:
     void drawRect();
     void drawCircle();
     void drawTriangle();
+    void drawEllipse();
     void chooseColor();
     void undoLastShape();
+    void drawFreeLine();
+
 private:
     Canvas *canvas;
 };

@@ -3,6 +3,8 @@
 #include "rect.h"
 #include "circle.h"
 #include "triangle.h"
+#include "ellipse.h"
+#include "freeline.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <QFile>
@@ -43,9 +45,16 @@ void Canvas::mousePressEvent(QMouseEvent *event) {
         currentShape = new Circle(startPoint, 0);
     } else if (mode == DrawTriangle) {
         currentShape = new Triangle(startPoint, startPoint, startPoint);
+    } else if (mode == DrawEllipse) {
+        currentShape = new Ellipse(startPoint, startPoint);
+    } else if (mode == DrawFreeLine) {
+        auto freeLine = new FreeLine();
+        freeLine->addPoint(event->pos());
+        currentShape = freeLine;
     }
     if (currentShape)
         currentShape->color = currentColor;
+        currentShape->penWidth = currentPenWidth;
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event) {
@@ -68,6 +77,13 @@ void Canvas::mouseMoveEvent(QMouseEvent *event) {
             QPoint p3((startPoint.x() + p2.x()) / 2, startPoint.y() - std::abs(p2.x() - startPoint.x()));
             triangle->p2 = p2;
             triangle->p3 = p3;
+        }
+    } else if (mode == DrawEllipse) {
+        dynamic_cast<Ellipse *>(currentShape)->rect = QRect(startPoint, event->pos()).normalized();
+    } else if (mode == DrawFreeLine) {
+        auto freeLine = dynamic_cast<FreeLine *>(currentShape);
+        if (freeLine) {
+            freeLine->addPoint(event->pos());
         }
     }
     update();
@@ -99,8 +115,16 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event) {
             triangle->p2 = p2;
             triangle->p3 = p3;
         }
+    } else if (mode == DrawEllipse) {
+        auto ellipse = dynamic_cast<Ellipse *>(currentShape);
+        if (ellipse)
+            ellipse->rect = QRect(startPoint, event->pos()).normalized();
+    } else if (mode == DrawFreeLine) {
+        auto freeLine = dynamic_cast<FreeLine *>(currentShape);
+        if (freeLine) {
+            freeLine->addPoint(event->pos());
+        }
     }
-
     shapes.append(currentShape);
     currentShape = nullptr;
     update();
@@ -132,6 +156,12 @@ void Canvas::saveToFile(const QString &fileName) {
         } else if (dynamic_cast<Triangle *>(shape)) {
             out << QString("Triangle");
             shape->serialize(out);
+        } else if (dynamic_cast<Ellipse *>(shape)) {
+            out << QString("Ellipse");
+            shape->serialize(out);
+        } else if (dynamic_cast<FreeLine *>(shape)) {
+            out << QString("FreeLine");
+            shape->serialize(out);
         }
     }
 }
@@ -157,6 +187,14 @@ void Canvas::loadFromFile(const QString &fileName) {
             shape = new Circle();
         } else if (type == "Triangle") {
             shape = new Triangle();
+        } else if (type == "Ellipse") {
+            shape = new Ellipse();
+        } else if (type == "FreeLine") {
+            shape = new FreeLine();
+        }
+        if (shape) {
+            shape->deserialize(in);
+            shapes.append(shape);
         }
     }
     update();
@@ -175,3 +213,8 @@ void Canvas::undoLastShape() {
         update();
     }
 }
+
+void Canvas::setCurrentPenWidth(int width) {
+    currentPenWidth = width;
+}
+
